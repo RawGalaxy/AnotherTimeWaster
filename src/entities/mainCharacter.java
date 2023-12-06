@@ -13,6 +13,10 @@ public class mainCharacter {
 	{
 		return this.powerLevel;
 	}
+	public String getName()
+	{
+		return this.name;
+	}
 	public void winBattle(int powerGain) {
 	    this.powerLevel += (powerGain / 2);
 	}

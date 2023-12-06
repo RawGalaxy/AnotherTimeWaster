@@ -1,5 +1,7 @@
 package entities;
 
+import javax.swing.JTextArea;
+
 public class monsters {
 	private int powerLevel;
 	private String name;
@@ -17,7 +19,7 @@ public class monsters {
 	{
 		return this.name;
 	}
-	public void winBattle() {
-		System.out.println("You lost.\n");
+	public void winBattle(JTextArea outputArea) {
+		outputArea.append("You lost.\n");
 	}
 }

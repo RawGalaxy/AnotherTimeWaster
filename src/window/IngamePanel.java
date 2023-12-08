@@ -6,12 +6,13 @@ import java.util.*;
 import entities.*;
 
 public class IngamePanel extends JPanel{
-	private mainCharacter hero;
+	public static mainCharacter hero;
     private Random random;
-    private JLabel powerLabel;
-    private JTextArea outputArea;
+    public static JLabel powerLabel;
+    public static JTextArea outputArea; //get rid of this later on when adding images/scene
+    public static monsters monster;
     private JPanel monsterPanel; // Panel to hold monster buttons
-    private int currentRound = 1; // Current round counter
+    private int currentRound = 0; // Current round counter
     private final int maxRounds = 5;
 
     public IngamePanel() {
@@ -59,39 +60,32 @@ public class IngamePanel extends JPanel{
         }
         monsterPanel.revalidate(); // Refresh the panel to display new buttons
         monsterPanel.repaint();
-        if(currentRound >= maxRounds) endGame();
+        if(currentRound == maxRounds) endGame();
         else currentRound++;
     }
     private void fight(monsters selectedMonster) {
-        if (selectedMonster != null) {
-            int monsterPower = selectedMonster.getPower();
-            outputArea.append("Fighting " + selectedMonster.getName() + " with " + monsterPower + " power\n");
-            if(hero.getPower() >= selectedMonster.getPower())
-    		{
-    			hero.winBattle(selectedMonster.getPower());
-    			outputArea.append("Hero won and gain " + selectedMonster.getPower() / 2 + " power!\n");
-    		}
-    		else
-    		{
-    			selectedMonster.winBattle(outputArea);
-    			switchToPanel("GameOver"); //actually losing
-    			
-    		}
-            updatePowerLabel();
-            spawnMonsters();
-        }
+        if (selectedMonster != null) switchToFightScene(selectedMonster);
     }
-    private void updatePowerLabel() 
-    {
-        powerLabel.setText("Hero Power: " + hero.getPower());
+    public void resumeAfterFight() {
+        updatePowerLabel();
+        spawnMonsters(); // Refresh the monsters after a fight
     }
-    private void switchToPanel(String panel)
+    public void switchToPanel(String panel)
     {
     	GamePanel parent = (GamePanel) getParent();
     	parent.showPanel(panel);
     }
     private void endGame()
     {
-    	switchToPanel("GameOver"); //Change to winning
+    	switchToPanel("EndGame"); //Winning
+    }
+
+    private void updatePowerLabel() 
+    {
+        powerLabel.setText("Hero Power: " + IngamePanel.hero.getPower());
+    }
+    private void switchToFightScene(monsters monster) {
+        GamePanel parent = (GamePanel) getParent();
+        parent.switchToFightScenePanel(monster); // A method in GamePanel to switch views
     }
 }

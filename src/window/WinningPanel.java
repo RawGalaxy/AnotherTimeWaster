@@ -2,11 +2,11 @@ package window;
 
 import javax.swing.*;
 
-public class GameOverPanel extends JPanel {
-    private PanelSwitchListener switchListener;
-    Timer timer;
-    public GameOverPanel() {
-        JLabel label = new JLabel("L FOR U");
+public class WinningPanel extends JPanel {
+	Timer timer;
+	private PanelSwitchListener switchListener;
+	public WinningPanel() {
+		JLabel label = new JLabel("W FOR U");
         add(label);
         timer = new Timer(1000, e -> initiateSwitch()); // Timer calls switchPanel after 5 seconds
         timer.setRepeats(false);

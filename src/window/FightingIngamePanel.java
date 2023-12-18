@@ -3,6 +3,7 @@ import javax.swing.*;
 import entities.monsters;
 
 public class FightingIngamePanel extends JPanel {
+	private static final long serialVersionUID = 1L;
     private monsters monster;
     private Timer timer;
 	public FightingIngamePanel(monsters monster) {
@@ -15,13 +16,12 @@ public class FightingIngamePanel extends JPanel {
     }
 
     public void runFightSequence() {
-    	 int monsterPower = monster.getPower();
+    	int monsterPower = monster.getPower();
     	IngamePanel.outputArea.append("Fighting " + monster.getName() + " with " + monsterPower + " power\n");
         if(IngamePanel.hero.getPower() >= monster.getPower())
 		{
         	IngamePanel.hero.winBattle(monster.getPower());
 			IngamePanel.outputArea.append("Hero won and gain " + monster.getPower() / 2 + " power!\n");
-			
 		}
 		else
 		{

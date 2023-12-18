@@ -3,6 +3,7 @@ package window;
 import javax.swing.*;
 
 public class WinningPanel extends JPanel {
+	private static final long serialVersionUID = 1L;
 	Timer timer;
 	private PanelSwitchListener switchListener;
 	public WinningPanel() {

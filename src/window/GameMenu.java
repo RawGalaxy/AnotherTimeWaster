@@ -1,8 +1,12 @@
 package window;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 
-public class GameMenu extends JPanel {
+public class GameMenu extends FadingPanel {
+	private static final long serialVersionUID = 1L;
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	double width = screenSize.getWidth();
 	double height = screenSize.getHeight();
@@ -29,7 +33,6 @@ public class GameMenu extends JPanel {
         int buttonWidth = 311;
         int buttonHeight = 137;
         int centerX = (int)width / 2 - buttonWidth / 2;
-        int centerY = (int)height / 2 - buttonHeight / 2;
         int startY = 250;
         
         playButton.setBounds(centerX, startY, buttonWidth, buttonHeight);
@@ -39,12 +42,19 @@ public class GameMenu extends JPanel {
         helpButton.addActionListener(e -> switchToPanel("HelpPanel"));
         
         quitButton.setBounds(centerX, startY + 2 * (buttonHeight + 20), buttonWidth, buttonHeight);
+        quitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
 
         // Add buttons to panel
         setLayout(null); // Use absolute positioning
         add(playButton);
         add(helpButton);
         add(quitButton);
+
     }
 
     private JButton createButton(String imagePath) {
@@ -78,7 +88,6 @@ public class GameMenu extends JPanel {
         // Draw the title image
         g2d.drawImage(titleImage, 800 - titleImage.getWidth(null) / 2, 0, this);
         g2d.dispose();
-
     }
     private void switchToPanel(String panel)
     {

@@ -7,6 +7,7 @@ import javax.swing.*;
 import entities.*;
 
 public class EndGame extends JPanel {
+	private static final long serialVersionUID = 1L;
 	Random random = new Random();
 	private JPanel monsterPanel;
 	

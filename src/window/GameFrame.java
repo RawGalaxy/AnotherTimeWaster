@@ -2,6 +2,7 @@ package window;
 import javax.swing.*;
 
 public class GameFrame extends JFrame{
+	private static final long serialVersionUID = 1L;
 	public GameFrame()
 	{
 		setTitle("Another Time Waster, horray!");

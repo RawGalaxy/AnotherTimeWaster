@@ -3,7 +3,8 @@ package window;
 import javax.swing.*;
 
 public class GameOverPanel extends JPanel {
-    private PanelSwitchListener switchListener;
+	private static final long serialVersionUID = 1L;
+	private PanelSwitchListener switchListener;
     Timer timer;
     public GameOverPanel() {
         JLabel label = new JLabel("L FOR U");

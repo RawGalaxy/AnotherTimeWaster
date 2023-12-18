@@ -1,11 +1,11 @@
 package window;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 import entities.*;
 
-public class IngamePanel extends JPanel{
+public class IngamePanel extends FadingPanel{
+	private static final long serialVersionUID = 1L;
 	public static mainCharacter hero;
     private Random random;
     public static JLabel powerLabel;
@@ -14,6 +14,10 @@ public class IngamePanel extends JPanel{
     private JPanel monsterPanel; // Panel to hold monster buttons
     private int currentRound = 0; // Current round counter
     private final int maxRounds = 5;
+    private ImageIcon normalIcon;
+    private ImageIcon hoverIcon;
+    private ImageIcon pressedIcon;
+    private Image backgroundImage;
 
     public IngamePanel() {
     	setLayout(new BorderLayout());
@@ -23,7 +27,9 @@ public class IngamePanel extends JPanel{
         powerLabel = new JLabel("Hero Power: " + hero.getPower());
         topPanel.add(powerLabel);
         add(topPanel, BorderLayout.NORTH);
-
+        normalIcon = new ImageIcon("src/window/buttons/Ingame/ClosedDoor.png"); // Fix the size/resolution
+        hoverIcon = new ImageIcon("src/window/buttons/Ingame/SlightlyOpen.png");
+        pressedIcon = new ImageIcon("src/window/buttons/Ingame/OpenedDoor.png");
         outputArea = new JTextArea(10, 30);
         outputArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(outputArea);
@@ -31,7 +37,13 @@ public class IngamePanel extends JPanel{
 
         monsterPanel = new JPanel(new GridBagLayout());
         add(monsterPanel, BorderLayout.CENTER);
-        
+    	backgroundImage = new ImageIcon("src/window/images/dfavegvawgw.png").getImage();
+        System.out.println("Background Image Dimensions: " + backgroundImage.getWidth(null) + "x" + backgroundImage.getHeight(null));
+        topPanel.setOpaque(false);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        monsterPanel.setOpaque(false);
+
         spawnMonsters();
     }
 
@@ -54,13 +66,30 @@ public class IngamePanel extends JPanel{
 	            default: 
 	                monster = new Orc(monsterPower);
             }
-            JButton monsterButton = new JButton(monster.getName() + " (" + monster.getPower() + ")");
+            // JButton monsterButton = new JButton(monster.getName() + " (" + monster.getPower() + ")");
+            JPanel monsterCon = new JPanel();
+            monsterCon.setLayout(new BoxLayout(monsterCon, BoxLayout.Y_AXIS));
+         // Create and add a label for the monster's name
+            JLabel nameLabel = new JLabel(monster.getName());
+            nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            monsterCon.add(nameLabel);
+
+            // Create and add the monster button
+            ImageButton monsterButton = new ImageButton(normalIcon, hoverIcon, pressedIcon);
             monsterButton.addActionListener(e -> fight(monster));
-            monsterPanel.add(monsterButton);
+            monsterCon.add(monsterButton);
+
+            // Create and add a label for the monster's power
+            JLabel powerLabel = new JLabel("Power: " + monster.getPower());
+            powerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            monsterCon.add(powerLabel);
+
+            // Add the container panel to the main monster panel
+            monsterPanel.add(monsterCon);
         }
         monsterPanel.revalidate(); // Refresh the panel to display new buttons
         monsterPanel.repaint();
-        if(currentRound == maxRounds) endGame();
+        if(currentRound == maxRounds) switchToPanel("EndGame");
         else currentRound++;
     }
     private void fight(monsters selectedMonster) {
@@ -75,10 +104,6 @@ public class IngamePanel extends JPanel{
     	GamePanel parent = (GamePanel) getParent();
     	parent.showPanel(panel);
     }
-    private void endGame()
-    {
-    	switchToPanel("EndGame"); //Winning
-    }
 
     private void updatePowerLabel() 
     {
@@ -87,5 +112,30 @@ public class IngamePanel extends JPanel{
     private void switchToFightScene(monsters monster) {
         GamePanel parent = (GamePanel) getParent();
         parent.switchToFightScenePanel(monster); // A method in GamePanel to switch views
+    }
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        System.out.println("paintComponent called - Panel size: " + getWidth() + "x" + getHeight());
+        Graphics2D g2d = (Graphics2D) g.create();
+        if (backgroundImage != null) {
+            System.out.println("Drawing background image");
+        }
+        else System.out.println("Background image is null");
+        // Calculate the appropriate scaling factor
+        double scaleWidth = getWidth() / (double) backgroundImage.getWidth(null);
+        double scaleHeight = getHeight() / (double) backgroundImage.getHeight(null);
+        double scale = Math.min(scaleWidth, scaleHeight); // Choose the smaller scale to fit in the window
+
+        // Calculate the new image dimensions while maintaining the aspect ratio
+        int newImageWidth = (int) (backgroundImage.getWidth(null) * scale);
+        int newImageHeight = (int) (backgroundImage.getHeight(null) * scale);
+
+        // Calculate the position to center the image
+        int x = (getWidth() - newImageWidth) / 2;
+        int y = (getHeight() - newImageHeight) / 2;
+
+        // Draw the scaled image
+        g2d.drawImage(backgroundImage, x, y, newImageWidth, newImageHeight, this);
+        g2d.dispose();
     }
 }
